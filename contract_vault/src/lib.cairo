@@ -1,32 +1,23 @@
-/// Interface representing `HelloContract`.
-/// This interface allows modification and retrieval of the contract balance.
 #[starknet::interface]
-pub trait IHelloStarknet<TContractState> {
-    /// Increase contract balance.
-    fn increase_balance(ref self: TContractState, amount: felt252);
-    /// Retrieve contract balance.
-    fn get_balance(self: @TContractState) -> felt252;
+pub trait IVitaVault<TContractState> {
+    fn verify_biometric_proof(ref self: TContractState, proof: felt252) -> bool;
 }
 
-/// Simple contract for managing balance.
 #[starknet::contract]
-mod HelloStarknet {
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+pub mod VitaVault {
+    use starknet::storage::StoragePointerWriteAccess;
 
     #[storage]
     struct Storage {
-        balance: felt252,
+        is_verified: bool,
     }
 
     #[abi(embed_v0)]
-    impl HelloStarknetImpl of super::IHelloStarknet<ContractState> {
-        fn increase_balance(ref self: ContractState, amount: felt252) {
-            assert(amount != 0, 'Amount cannot be 0');
-            self.balance.write(self.balance.read() + amount);
-        }
+    impl VitaVaultImpl of super::IVitaVault<ContractState> {
+        fn verify_biometric_proof(ref self: ContractState, proof: felt252) -> bool {
 
-        fn get_balance(self: @ContractState) -> felt252 {
-            self.balance.read()
+            self.is_verified.write(true);
+            true
         }
     }
 }
