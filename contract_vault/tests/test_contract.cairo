@@ -22,6 +22,8 @@ fn test_verify_biometric_proof() {
     
     //dummy proof but later to change 
     let success = dispatcher.verify_biometric_proof(123);
+   //print 
+   println!("Status: {}", dispatcher.get_status());
 
     //valut return true
     assert(success == true, 'Verification Failed');
