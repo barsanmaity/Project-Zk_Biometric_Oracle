@@ -2,12 +2,14 @@ module main_engine
 
 go 1.25.7
 
-require github.com/consensys/gnark v0.15.0
+require (
+	github.com/consensys/gnark v0.15.0
+	github.com/consensys/gnark-crypto v0.20.1
+)
 
 require (
 	github.com/bits-and-blooms/bitset v1.24.4 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/consensys/gnark-crypto v0.20.1 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
 	github.com/google/pprof v0.0.0-20260202012954-cb029daf43ef // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
