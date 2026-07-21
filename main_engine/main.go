@@ -17,7 +17,6 @@ type Vcircuit struct {
 	//hold fingerprint
 	Fingerprint [13]frontend.Variable `gnark:",secret"` //hidden in final proof
 }
-
 //math rules
 func (circuit *Vcircuit) Define(api frontend.API) error {
 	//none of the fingerprint value != 0
@@ -61,6 +60,15 @@ func main() {
 	 }
 	 fmt.Println("Proving key and Verifying key generated successfully")
 
+    //save keys to disk
+	pkFile, _ :=os.Create("provingKey.bin")
+	provingKey.WriteTo(pkFile)
+	pkFile.Close()
+    
+	vkFile, _ :=os.Create("verifyingKey.bin")
+	verifyingKey.WriteTo(vkFile)
+	vkFile.Close()
+
 	fmt.Println("injecting fingerprint..")
 	var witnessVars [13]frontend.Variable
 	for i := 0; i<13; i++ {
@@ -74,13 +82,16 @@ func main() {
 	if err != nil {
 		log.Fatal("witness create error: ", err)
 	}
-
 	//generating proof 
 	fmt.Println("generating proof..")
 	proof, err := groth16.Prove(compileConstraint, provingKey, witness)
 	if err != nil {
 		log.Fatal("Prove error: ", err)
 	}
+	fmt.Println("saving proof in disk")
+	prooffile, _ :=os.Create("proof.bin")
+	proof.WriteTo(prooffile)
+	prooffile.Close()
 	
 	//verify
 	publicWitness, err := frontend.NewWitness(&assignment, ecc.BN254.ScalarField(), frontend.PublicOnly())
